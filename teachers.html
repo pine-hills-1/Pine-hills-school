@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Teachers — Pine Hills School</title>
+  <style>
+    :root{--primary:#0b67ff;--dark:#03264c;--muted:#6b7280;--bg:#f6f9ff}
+    body{font-family:Inter,Arial;background:var(--bg);margin:0;color:var(--dark)}
+    header{background:linear-gradient(90deg,var(--primary),#009dff);color:white;padding:14px 16px}
+    .wrap{max-width:1000px;margin:20px auto;padding:0 16px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+    .teacher{background:white;padding:12px;border-radius:10px;box-shadow:0 8px 20px rgba(3,38,76,0.06);text-align:center}
+    .teacher img{width:100%;height:200px;object-fit:cover;border-radius:8px}
+    a.back{display:inline-block;margin:12px 0;color:var(--primary);text-decoration:none}
+  </style>
+</head><body>
+  <header><div style="max-width:1100px;margin:0 auto"><h2 style="margin:0">Teachers</h2></div></header>
+  <div class="wrap"><a class="back" href="index.html">← Back to Home</a>
+    <p>Meet our experienced faculty:</p>
+    <div class="grid">
+      <div class="teacher"><img src="https://source.unsplash.com/400x400/?teacher,portrait"><h3>Ms. Anjali Sharma</h3><p style="color:var(--muted)">English — Classes 5-8</p></div>
+      <div class="teacher"><img src="https://source.unsplash.com/400x400/?male,teacher"><h3>Mr. Rajesh Kumar</h3><p style="color:var(--muted)">Mathematics — Classes 6-10</p></div>
+      <div class="teacher"><img src="https://source.unsplash.com/400x400/?science,teacher"><h3>Mr. Anil Singh</h3><p style="color:var(--muted)">Science — Classes 9-12</p></div>
+      <div class="teacher"><img src="https://source.unsplash.com/400x400/?female,teacher"><h3>Ms. Sima Verma</h3><p style="color:var(--muted)">Lower Primary</p></div>
+    </div>
+  </div>
+</body></html>

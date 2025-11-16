@@ -1,0 +1,2368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Student Result Lookup</title>
+<style>
+body{font-family:Arial;background:#f0f2f7;margin:0;padding:20px;color:#111}
+.container{max-width:650px;margin:auto;background:#fff;padding:22px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,0.08)}
+h2{text-align:center;margin-top:0}
+input{width:100%;padding:11px;margin:10px 0;border:1px solid #ccc;border-radius:8px}
+.btn{width:100%;padding:12px;background:#2563eb;color:#fff;border:0;border-radius:8px;cursor:pointer;margin-top:5px}
+.table{margin-top:18px;width:100%;border-collapse:collapse}
+.table th,.table td{padding:10px;border-bottom:1px solid #ddd;text-align:left}
+.result-box{margin-top:20px;padding:15px;border:1px solid #e5e7eb;border-radius:10px;display:none;background:#fafbff}
+.download-btn{background:#14b814;margin-top:15px}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>Search Student Result</h2>
+
+<input id="roll" type="number" placeholder="Enter Roll Number">
+<button class="btn" onclick="findResult()">Show Result</button>
+
+<div id="result" class="result-box"></div>
+<button id="downloadBtn" class="btn download-btn" style="display:none" onclick="downloadResult()">Download Result (Word)</button>
+</div>
+
+<script>
+// SAMPLE DATA
+const students = [
+  {
+    "roll": 1037,
+    "name": "Abubakar",
+    "class": "Play",
+    "father": "Mudsir",
+    "marks": {
+      "English": 46,
+      "Urdu": 42,
+      "Math": 45,
+      "islamiat": 25,
+      "Draw": 49,
+      "G-K": 40.0,
+      "cop": 5,
+      "Uni": 9,
+      "BeH": 9,
+      "Atd": 107
+    },
+    "total": 330,
+    "obtained": 270,
+    "grade": "A1",
+    "percentage": 81.81818181818183
+  },
+  {
+    "roll": 1068,
+    "name": "Abdul Rehman",
+    "class": "Play",
+    "father": "Naveed Ahmed",
+    "marks": {
+      "English": 48,
+      "Urdu": 43,
+      "Math": 47,
+      "islamiat": 45,
+      "Draw": 49,
+      "G-K": 50.0,
+      "cop": 5,
+      "Uni": 9,
+      "BeH": 8,
+      "Atd": 115
+    },
+    "total": 330,
+    "obtained": 304,
+    "grade": "A1",
+    "percentage": 92.12121212121212
+  },
+  {
+    "roll": 1077,
+    "name": "SUMMAIYA",
+    "class": "Play",
+    "father": "Rustam Khan",
+    "marks": {
+      "English": 48,
+      "Urdu": 50,
+      "Math": 49,
+      "islamiat": 45,
+      "Draw": 49,
+      "G-K": 49.0,
+      "cop": 9,
+      "Uni": 9,
+      "BeH": 9,
+      "Atd": 120
+    },
+    "total": 330,
+    "obtained": 317,
+    "grade": "A1",
+    "percentage": 96.06060606060606
+  },
+  {
+    "roll": 1082,
+    "name": "Hamdan",
+    "class": "Play",
+    "father": "Kamran",
+    "marks": {
+      "English": 49,
+      "Urdu": 45,
+      "Math": 49,
+      "islamiat": 35,
+      "Draw": 48,
+      "G-K": 50.0,
+      "cop": 7,
+      "Uni": 9,
+      "BeH": 10,
+      "Atd": 90
+    },
+    "total": 330,
+    "obtained": 302,
+    "grade": "A1",
+    "percentage": 91.51515151515152
+  },
+  {
+    "roll": 1084,
+    "name": "Abdul Bari",
+    "class": "Play",
+    "father": "Naeem Khan",
+    "marks": {
+      "English": 47,
+      "Urdu": 45,
+      "Math": 49,
+      "islamiat": "A",
+      "Draw": 48,
+      "G-K": 39.0,
+      "cop": 7,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 110
+    },
+    "total": 330,
+    "obtained": 255,
+    "grade": "A",
+    "percentage": 77.27272727272727
+  },
+  {
+    "roll": 1087,
+    "name": "Muhammad Ummar",
+    "class": "Play",
+    "father": "Ishtiaq Ahmad",
+    "marks": {
+      "English": 46,
+      "Urdu": 50,
+      "Math": 46,
+      "islamiat": 48,
+      "Draw": 48,
+      "G-K": 44.0,
+      "cop": 7,
+      "Uni": 9,
+      "BeH": 10,
+      "Atd": 91
+    },
+    "total": 330,
+    "obtained": 308,
+    "grade": "A1",
+    "percentage": 93.33333333333333
+  },
+  {
+    "roll": 1092,
+    "name": "Muhammad Ifraheem",
+    "class": "Play",
+    "father": "Khurram Shehzad",
+    "marks": {
+      "English": 43,
+      "Urdu": 48,
+      "Math": 48,
+      "islamiat": 48,
+      "Draw": 45,
+      "G-K": 50.0,
+      "cop": 5,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 106
+    },
+    "total": 330,
+    "obtained": 307,
+    "grade": "A1",
+    "percentage": 93.03030303030303
+  },
+  {
+    "roll": 1093,
+    "name": "Muhammad yasir",
+    "class": "Play",
+    "father": "Waqas Ahamad",
+    "marks": {
+      "English": 44,
+      "Urdu": 41,
+      "Math": 40,
+      "islamiat": 34,
+      "Draw": 47,
+      "G-K": 30.0,
+      "cop": 8,
+      "Uni": 0,
+      "BeH": 10,
+      "Atd": 55
+    },
+    "total": 330,
+    "obtained": 254,
+    "grade": "A",
+    "percentage": 76.96969696969697
+  },
+  {
+    "roll": 1094,
+    "name": "Muhammad Suffiyan",
+    "class": "Play",
+    "father": "Sajeel Ahmed",
+    "marks": {
+      "English": 45,
+      "Urdu": 48,
+      "Math": "a",
+      "islamiat": 48,
+      "Draw": 48,
+      "G-K": 49.0,
+      "cop": 8,
+      "Uni": 9,
+      "BeH": 9,
+      "Atd": 104
+    },
+    "total": 330,
+    "obtained": 264,
+    "grade": "A1",
+    "percentage": 80.0
+  },
+  {
+    "roll": 1099,
+    "name": "Muhammad Azan",
+    "class": "Play",
+    "father": "Zafran Khan",
+    "marks": {
+      "English": 44,
+      "Urdu": 44,
+      "Math": 48,
+      "islamiat": 40,
+      "Draw": 49,
+      "G-K": 49.0,
+      "cop": 7,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 77
+    },
+    "total": 330,
+    "obtained": 300,
+    "grade": "A1",
+    "percentage": 90.9090909090909
+  },
+  {
+    "roll": 1100,
+    "name": "Armeena",
+    "class": "Play",
+    "father": "Rafaqat Ali",
+    "marks": {
+      "English": 48,
+      "Urdu": 49,
+      "Math": 48,
+      "islamiat": 28,
+      "Draw": 47,
+      "G-K": 40.0,
+      "cop": 10,
+      "Uni": 0,
+      "BeH": 10,
+      "Atd": 53
+    },
+    "total": 330,
+    "obtained": 280,
+    "grade": "A1",
+    "percentage": 84.84848484848484
+  },
+  {
+    "roll": 1111,
+    "name": "Fahad",
+    "class": "Play",
+    "father": "Sayed Akhtar",
+    "marks": {
+      "English": 48,
+      "Urdu": 46,
+      "Math": 40,
+      "islamiat": 44,
+      "Draw": 48,
+      "G-K": 49.0,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 41
+    },
+    "total": 330,
+    "obtained": 303,
+    "grade": "A1",
+    "percentage": 91.81818181818183
+  },
+  {
+    "roll": 1116,
+    "name": "Zarish",
+    "class": "Play",
+    "father": "Faisal",
+    "marks": {
+      "English": 48,
+      "Urdu": 49,
+      "Math": 48,
+      "islamiat": 50,
+      "Draw": 49,
+      "G-K": 50.0,
+      "cop": 8,
+      "Uni": 9,
+      "BeH": 8,
+      "Atd": 97
+    },
+    "total": 330,
+    "obtained": 319,
+    "grade": "A1",
+    "percentage": 96.66666666666667
+  },
+  {
+    "roll": 1091,
+    "name": "Anabia Batool",
+    "class": "Nursiry",
+    "father": "Khurram Shehzad",
+    "marks": {
+      "English": 38,
+      "Urdu": 45,
+      "Math": 48,
+      "islamiat": 15,
+      "Draw": 46,
+      "G-K": 40.0,
+      "cop": 8,
+      "Uni": 10,
+      "BeH": 7,
+      "Atd": 23
+    },
+    "total": 330,
+    "obtained": 257,
+    "grade": "A",
+    "percentage": 77.87878787878788
+  },
+  {
+    "roll": 1032,
+    "name": "iqra",
+    "class": "Nursiry",
+    "father": "Toseef",
+    "marks": {
+      "English": 46,
+      "Urdu": 50,
+      "Math": 49,
+      "islamiat": 50,
+      "Draw": 49,
+      "G-K": 49.0,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 70
+    },
+    "total": 330,
+    "obtained": 323,
+    "grade": "A1",
+    "percentage": 97.87878787878788
+  },
+  {
+    "roll": 1060,
+    "name": "Arham",
+    "class": "Nursiry",
+    "father": "Gaffar",
+    "marks": {
+      "English": 47,
+      "Urdu": 49,
+      "Math": 43,
+      "islamiat": 50,
+      "Draw": 47,
+      "G-K": 50.0,
+      "cop": 8,
+      "Uni": 9,
+      "BeH": 10,
+      "Atd": 93
+    },
+    "total": 330,
+    "obtained": 313,
+    "grade": "A1",
+    "percentage": 94.84848484848484
+  },
+  {
+    "roll": 1076,
+    "name": "Amena",
+    "class": "Nursiry",
+    "father": "Rustam Khan",
+    "marks": {
+      "English": 49,
+      "Urdu": 50,
+      "Math": 50,
+      "islamiat": 50,
+      "Draw": 49,
+      "G-K": 40.0,
+      "cop": 9,
+      "Uni": 9,
+      "BeH": 9,
+      "Atd": 100
+    },
+    "total": 330,
+    "obtained": 315,
+    "grade": "A1",
+    "percentage": 95.45454545454545
+  },
+  {
+    "roll": 1079,
+    "name": "Maryem",
+    "class": "Nursiry",
+    "father": "AZAM HUSSAIN",
+    "marks": {
+      "English": 48,
+      "Urdu": 49,
+      "Math": 48,
+      "islamiat": 45,
+      "Draw": 49,
+      "G-K": 49.0,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 97
+    },
+    "total": 330,
+    "obtained": 318,
+    "grade": "A1",
+    "percentage": 96.36363636363636
+  },
+  {
+    "roll": 1083,
+    "name": "Rohan",
+    "class": "Nursiry",
+    "father": "Muhammad Faheem",
+    "marks": {
+      "English": 46,
+      "Urdu": 50,
+      "Math": 49,
+      "islamiat": 50,
+      "Draw": 48,
+      "G-K": 50.0,
+      "cop": 8,
+      "Uni": 9,
+      "BeH": 10,
+      "Atd": 93
+    },
+    "total": 330,
+    "obtained": 320,
+    "grade": "A1",
+    "percentage": 96.96969696969697
+  },
+  {
+    "roll": 1089,
+    "name": "Zain Ali Attari",
+    "class": "Nursiry",
+    "father": "Atiq ur Rehman",
+    "marks": {
+      "English": 44,
+      "Urdu": 41,
+      "Math": 43,
+      "islamiat": 45,
+      "Draw": 49,
+      "G-K": 50.0,
+      "cop": 8,
+      "Uni": 9,
+      "BeH": 10,
+      "Atd": 93
+    },
+    "total": 330,
+    "obtained": 299,
+    "grade": "A1",
+    "percentage": 90.6060606060606
+  },
+  {
+    "roll": 1108,
+    "name": "BiBi Fatima",
+    "class": "Nursiry",
+    "father": "Muhammad Abid",
+    "marks": {
+      "English": 45,
+      "Urdu": 49,
+      "Math": 47,
+      "islamiat": 40,
+      "Draw": 47,
+      "G-K": 49.0,
+      "cop": 8,
+      "Uni": 0,
+      "BeH": 10,
+      "Atd": 58
+    },
+    "total": 330,
+    "obtained": 295,
+    "grade": "A1",
+    "percentage": 89.39393939393939
+  },
+  {
+    "roll": 1112,
+    "name": "Muneba",
+    "class": "Nursiry",
+    "father": "Tahir",
+    "marks": {
+      "English": 48,
+      "Urdu": 48,
+      "Math": 47,
+      "islamiat": 50,
+      "Draw": 48,
+      "G-K": 50.0,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 73
+    },
+    "total": 330,
+    "obtained": 319,
+    "grade": "A1",
+    "percentage": 96.66666666666667
+  },
+  {
+    "roll": 1117,
+    "name": "Aryan",
+    "class": "Nursiry",
+    "father": "Noman",
+    "marks": {
+      "English": 45,
+      "Urdu": 48,
+      "Math": 46,
+      "islamiat": 49,
+      "Draw": 47,
+      "G-K": 50.0,
+      "cop": 9,
+      "Uni": 0,
+      "BeH": 9,
+      "Atd": 23
+    },
+    "total": 330,
+    "obtained": 303,
+    "grade": "A1",
+    "percentage": 91.81818181818183
+  },
+  {
+    "roll": 1038,
+    "name": "Haya Noor",
+    "class": "KG1",
+    "father": "Mudsir",
+    "marks": {
+      "English": 48,
+      "Urdu": 43,
+      "Math": 82,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 49,
+      "G-K": 40.0,
+      "cop": 8,
+      "Uni": 9,
+      "BeH": 9,
+      "Atd": 93
+    },
+    "total": 430,
+    "obtained": 387,
+    "grade": "A1",
+    "percentage": 90.0
+  },
+  {
+    "roll": 1048,
+    "name": "Aleena",
+    "class": "KG1",
+    "father": "Shehzad Khan",
+    "marks": {
+      "English": 49,
+      "Urdu": 49,
+      "Math": 100,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 49,
+      "G-K": 50.0,
+      "cop": 8,
+      "Uni": 9,
+      "BeH": 8,
+      "Atd": 95
+    },
+    "total": 430,
+    "obtained": 421,
+    "grade": "A1",
+    "percentage": 97.90697674418605
+  },
+  {
+    "roll": 1049,
+    "name": "Ahmed  ",
+    "class": "KG1",
+    "father": "M-Arif",
+    "marks": {
+      "English": 48,
+      "Urdu": 42,
+      "Math": 93,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 50,
+      "G-K": 39.0,
+      "cop": 8,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 87
+    },
+    "total": 430,
+    "obtained": 399,
+    "grade": "A1",
+    "percentage": 92.79069767441861
+  },
+  {
+    "roll": 1050,
+    "name": "M-Yaseen",
+    "class": "KG1",
+    "father": "M-Firdos",
+    "marks": {
+      "English": 48,
+      "Urdu": 48,
+      "Math": 100,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 49,
+      "G-K": 50.0,
+      "cop": 8,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 96
+    },
+    "total": 430,
+    "obtained": 422,
+    "grade": "A1",
+    "percentage": 98.13953488372093
+  },
+  {
+    "roll": 1051,
+    "name": "Sadeequllaha",
+    "class": "KG1",
+    "father": "Muneer ",
+    "marks": {
+      "English": 48,
+      "Urdu": 45,
+      "Math": 100,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 49,
+      "G-K": 35.0,
+      "cop": 8,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 95
+    },
+    "total": 430,
+    "obtained": 403,
+    "grade": "A1",
+    "percentage": 93.72093023255815
+  },
+  {
+    "roll": 1056,
+    "name": "Shah Meer Ali",
+    "class": "KG1",
+    "father": "Rafaqat Ali",
+    "marks": {
+      "English": 48,
+      "Urdu": 47,
+      "Math": 100,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 50,
+      "G-K": 43.0,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 99
+    },
+    "total": 430,
+    "obtained": 417,
+    "grade": "A1",
+    "percentage": 96.97674418604652
+  },
+  {
+    "roll": 1058,
+    "name": "Muhammad Husnain ",
+    "class": "KG1",
+    "father": "Muhammad Rafaqat",
+    "marks": {
+      "English": 49,
+      "Urdu": 48,
+      "Math": 99,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 49,
+      "G-K": 48.0,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 92
+    },
+    "total": 430,
+    "obtained": 421,
+    "grade": "A1",
+    "percentage": 97.90697674418605
+  },
+  {
+    "roll": 1059,
+    "name": "M -Umer",
+    "class": "KG1",
+    "father": "Muhammad Asif",
+    "marks": {
+      "English": 46,
+      "Urdu": 43,
+      "Math": 69,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 49,
+      "G-K": 39.0,
+      "cop": 8,
+      "Uni": 9,
+      "BeH": 9,
+      "Atd": 94
+    },
+    "total": 430,
+    "obtained": 371,
+    "grade": "A1",
+    "percentage": 86.27906976744187
+  },
+  {
+    "roll": 1064,
+    "name": "Abdulrehman",
+    "class": "KG1",
+    "father": "Naeem Khan",
+    "marks": {
+      "English": 49,
+      "Urdu": 47,
+      "Math": 99,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 48,
+      "G-K": 24.0,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 85
+    },
+    "total": 430,
+    "obtained": 395,
+    "grade": "A1",
+    "percentage": 91.86046511627907
+  },
+  {
+    "roll": 1074,
+    "name": "Muskan",
+    "class": "KG1",
+    "father": "Muhammad Mahroof",
+    "marks": {
+      "English": 49,
+      "Urdu": 49,
+      "Math": 100,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 49,
+      "G-K": 50.0,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 8,
+      "Atd": 93
+    },
+    "total": 430,
+    "obtained": 423,
+    "grade": "A1",
+    "percentage": 98.37209302325581
+  },
+  {
+    "roll": 1078,
+    "name": "Shifa",
+    "class": "KG1",
+    "father": "Rustam Khan",
+    "marks": {
+      "English": 50,
+      "Urdu": 49,
+      "Math": 100,
+      "islamiat": 50,
+      "Exbi": 50.0,
+      "Draw": 50,
+      "G-K": 50.0,
+      "cop": 10,
+      "Uni": 9,
+      "BeH": 10,
+      "Atd": 97
+    },
+    "total": 430,
+    "obtained": 428,
+    "grade": "A1",
+    "percentage": 99.53488372093024
+  },
+  {
+    "roll": 1085,
+    "name": "Nayab",
+    "class": "KG1",
+    "father": "Amjid Ali",
+    "marks": {
+      "English": 49,
+      "Urdu": 49,
+      "Math": 100,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 49,
+      "G-K": 45.0,
+      "cop": 8,
+      "Uni": 9,
+      "BeH": 9,
+      "Atd": 89
+    },
+    "total": 430,
+    "obtained": 417,
+    "grade": "A1",
+    "percentage": 96.97674418604652
+  },
+  {
+    "roll": 1088,
+    "name": "Hassan Ali Attari",
+    "class": "KG1",
+    "father": "Ishtiaq Ahmad",
+    "marks": {
+      "English": 48,
+      "Urdu": 47,
+      "Math": 100,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 49,
+      "G-K": 32.0,
+      "cop": 8,
+      "Uni": 9,
+      "BeH": 9,
+      "Atd": 95
+    },
+    "total": 430,
+    "obtained": 401,
+    "grade": "A1",
+    "percentage": 93.25581395348837
+  },
+  {
+    "roll": 1080,
+    "name": "Muqaddas",
+    "class": "KG1",
+    "father": "AZAM HUSSAIN",
+    "marks": {
+      "English": 49,
+      "Urdu": 49,
+      "Math": 100,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 50,
+      "G-K": 45.0,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 102
+    },
+    "total": 430,
+    "obtained": 421,
+    "grade": "A1",
+    "percentage": 97.90697674418605
+  },
+  {
+    "roll": 1101,
+    "name": "Ariba",
+    "class": "KG1",
+    "father": "Sami ullah khan",
+    "marks": {
+      "English": 49,
+      "Urdu": 47,
+      "Math": 100,
+      "islamiat": 45,
+      "Exbi": 49.0,
+      "Draw": 50,
+      "G-K": 18.0,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 65
+    },
+    "total": 430,
+    "obtained": 388,
+    "grade": "A1",
+    "percentage": 90.23255813953487
+  },
+  {
+    "roll": 1105,
+    "name": "Wajhia",
+    "class": "KG1",
+    "father": "Syed umar badshah",
+    "marks": {
+      "English": 49,
+      "Urdu": 49,
+      "Math": 100,
+      "islamiat": 50,
+      "Exbi": 49.0,
+      "Draw": 50,
+      "G-K": 50.0,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 8,
+      "Atd": 84
+    },
+    "total": 430,
+    "obtained": 425,
+    "grade": "A1",
+    "percentage": 98.83720930232558
+  },
+  {
+    "roll": 1007,
+    "name": "Aniya",
+    "class": 1,
+    "father": "Muhammad Arshad",
+    "marks": {
+      "English": 99,
+      "Urdu": 99,
+      "Math": 92,
+      "islamiat": 48,
+      "Sci": 47,
+      "S-St": "A",
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 74
+    },
+    "total": 560,
+    "obtained": 474,
+    "grade": "A1",
+    "percentage": 84.64285714285714
+  },
+  {
+    "roll": 1034,
+    "name": "Saira",
+    "class": 1,
+    "father": "Majid Ali",
+    "marks": {
+      "English": 99,
+      "Urdu": 93,
+      "Math": 88,
+      "islamiat": 41,
+      "Sci": 36,
+      "S-St": 61,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 53
+    },
+    "total": 560,
+    "obtained": 508,
+    "grade": "A1",
+    "percentage": 90.71428571428571
+  },
+  {
+    "roll": 1036,
+    "name": "Eman Gul",
+    "class": 1,
+    "father": "Muhammad Younus",
+    "marks": {
+      "English": 97,
+      "Urdu": 99,
+      "Math": 98,
+      "islamiat": 49,
+      "Sci": 49,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 62
+    },
+    "total": 560,
+    "obtained": 551,
+    "grade": "A1",
+    "percentage": 98.39285714285714
+  },
+  {
+    "roll": 1061,
+    "name": "Wajhia",
+    "class": 1,
+    "father": "Gaffar",
+    "marks": {
+      "English": 99,
+      "Urdu": 97,
+      "Math": 98,
+      "islamiat": 49,
+      "Sci": 47,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 90
+    },
+    "total": 560,
+    "obtained": 549,
+    "grade": "A1",
+    "percentage": 98.03571428571428
+  },
+  {
+    "roll": 1071,
+    "name": "Abdul Amid",
+    "class": 1,
+    "father": "Mushtaq Ahmed",
+    "marks": {
+      "English": 99,
+      "Urdu": 98,
+      "Math": 90,
+      "islamiat": 48,
+      "Sci": 44,
+      "S-St": 51,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 69
+    },
+    "total": 560,
+    "obtained": 519,
+    "grade": "A1",
+    "percentage": 92.67857142857143
+  },
+  {
+    "roll": 1072,
+    "name": "Mubasher",
+    "class": 1,
+    "father": "Shehzad Khan",
+    "marks": {
+      "English": 99,
+      "Urdu": 99,
+      "Math": 94,
+      "islamiat": 49,
+      "Sci": 50,
+      "S-St": 65,
+      "Exbi": 10.0,
+      "Draw": 49,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 8,
+      "Atd": 92
+    },
+    "total": 560,
+    "obtained": 543,
+    "grade": "A1",
+    "percentage": 96.96428571428571
+  },
+  {
+    "roll": 1073,
+    "name": "Samiulrehman",
+    "class": 1,
+    "father": "Shehzad Khan",
+    "marks": {
+      "English": 97,
+      "Urdu": 99,
+      "Math": 90,
+      "islamiat": 49,
+      "Sci": 48,
+      "S-St": 65,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 8,
+      "Atd": 95
+    },
+    "total": 560,
+    "obtained": 536,
+    "grade": "A1",
+    "percentage": 95.71428571428572
+  },
+  {
+    "roll": 1003,
+    "name": "Shakirullah",
+    "class": 2,
+    "father": "MUNEER",
+    "marks": {
+      "English": 99,
+      "Urdu": 98,
+      "Math": 37,
+      "islamiat": 68,
+      "Sci": 64,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 49,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 78
+    },
+    "total": 540,
+    "obtained": 524,
+    "grade": "A1",
+    "percentage": 97.03703703703704
+  },
+  {
+    "roll": 1010,
+    "name": "Abdulwasay",
+    "class": 2,
+    "father": "AJMAL",
+    "marks": {
+      "English": 93,
+      "Urdu": 94,
+      "Math": 39,
+      "islamiat": 64,
+      "Sci": 65,
+      "S-St": 64,
+      "Exbi": 8.0,
+      "Draw": 50,
+      "cop": 9,
+      "Uni": 9,
+      "BeH": 8,
+      "Atd": 32
+    },
+    "total": 540,
+    "obtained": 503,
+    "grade": "A1",
+    "percentage": 93.14814814814815
+  },
+  {
+    "roll": 1019,
+    "name": "MUHMMAD",
+    "class": 2,
+    "father": "TAHIR",
+    "marks": {
+      "English": 97,
+      "Urdu": 98,
+      "Math": 37,
+      "islamiat": 69,
+      "Sci": 70,
+      "S-St": 67,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 9,
+      "Uni": 9,
+      "BeH": 10,
+      "Atd": 72
+    },
+    "total": 540,
+    "obtained": 526,
+    "grade": "A1",
+    "percentage": 97.4074074074074
+  },
+  {
+    "roll": 1020,
+    "name": "Bisma",
+    "class": 2,
+    "father": "TAHIR",
+    "marks": {
+      "English": 99,
+      "Urdu": 99,
+      "Math": 39,
+      "islamiat": 70,
+      "Sci": 69,
+      "S-St": 70,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 80
+    },
+    "total": 540,
+    "obtained": 536,
+    "grade": "A1",
+    "percentage": 99.25925925925925
+  },
+  {
+    "roll": 1026,
+    "name": "Zarah Fatima",
+    "class": 2,
+    "father": "Barkat Ali",
+    "marks": {
+      "English": 94,
+      "Urdu": 98,
+      "Math": 39,
+      "islamiat": 67,
+      "Sci": 67,
+      "S-St": 69,
+      "Exbi": 8.0,
+      "Draw": 50,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 62
+    },
+    "total": 540,
+    "obtained": 522,
+    "grade": "A1",
+    "percentage": 96.66666666666667
+  },
+  {
+    "roll": 1054,
+    "name": "Ahmad Ali",
+    "class": 2,
+    "father": "Sajeel Ahmed",
+    "marks": {
+      "English": 99,
+      "Urdu": 97,
+      "Math": 39,
+      "islamiat": 63,
+      "Sci": 66,
+      "S-St": 61,
+      "Exbi": 10.0,
+      "Draw": 46,
+      "cop": 10,
+      "Uni": 9,
+      "BeH": 10,
+      "Atd": 89
+    },
+    "total": 540,
+    "obtained": 510,
+    "grade": "A1",
+    "percentage": 94.44444444444444
+  },
+  {
+    "roll": 1062,
+    "name": "Anees",
+    "class": 2,
+    "father": "Gaffar",
+    "marks": {
+      "English": 99,
+      "Urdu": 96,
+      "Math": 39,
+      "islamiat": 68,
+      "Sci": 44,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 49,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 89
+    },
+    "total": 540,
+    "obtained": 504,
+    "grade": "A1",
+    "percentage": 93.33333333333333
+  },
+  {
+    "roll": 1106,
+    "name": "Asma",
+    "class": 2,
+    "father": "Syed umar badshah",
+    "marks": {
+      "English": 99,
+      "Urdu": 99,
+      "Math": 37,
+      "islamiat": 69,
+      "Sci": 69,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 43
+    },
+    "total": 540,
+    "obtained": 531,
+    "grade": "A1",
+    "percentage": 98.33333333333333
+  },
+  {
+    "roll": 1109,
+    "name": "BiBi Marwah",
+    "class": 2,
+    "father": "Muhammad Abid",
+    "marks": {
+      "English": 74,
+      "Urdu": 96,
+      "Math": 37,
+      "islamiat": 66,
+      "Sci": 65,
+      "S-St": 61,
+      "Exbi": 10.0,
+      "Draw": 49,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 38
+    },
+    "total": 540,
+    "obtained": 487,
+    "grade": "A1",
+    "percentage": 90.18518518518519
+  },
+  {
+    "roll": 1102,
+    "name": "Fayyaz",
+    "class": 2,
+    "father": "Sami ullah khan",
+    "marks": {
+      "English": 84,
+      "Urdu": 81,
+      "Math": 31,
+      "islamiat": 4,
+      "Sci": 43,
+      "S-St": "A",
+      "Exbi": 10.0,
+      "Draw": 49,
+      "cop": 0,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 46
+    },
+    "total": 540,
+    "obtained": 322,
+    "grade": "B",
+    "percentage": 59.62962962962963
+  },
+  {
+    "roll": 1031,
+    "name": "Sadiq",
+    "class": 3,
+    "father": "Ezhar Muhammad",
+    "marks": {
+      "English": 88,
+      "Urdu": 66,
+      "Math": 95,
+      "islamiat": 68,
+      "Sci": 97,
+      "S-St": 68,
+      "Exbi": 10.0,
+      "Draw": 43,
+      "cop": 8,
+      "Uni": 10,
+      "BeH": 5,
+      "Atd": 96
+    },
+    "total": 600,
+    "obtained": 558,
+    "grade": "A1",
+    "percentage": 93.0
+  },
+  {
+    "roll": 1039,
+    "name": "Ayesha",
+    "class": 3,
+    "father": "Mureed Husain",
+    "marks": {
+      "English": 90,
+      "Urdu": 69,
+      "Math": 52,
+      "islamiat": 69,
+      "Sci": 98,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 46,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 104
+    },
+    "total": 600,
+    "obtained": 532,
+    "grade": "A1",
+    "percentage": 88.66666666666667
+  },
+  {
+    "roll": 1042,
+    "name": "Ayeza",
+    "class": 3,
+    "father": "Zafran Khan",
+    "marks": {
+      "English": 90,
+      "Urdu": 68,
+      "Math": 95,
+      "islamiat": 69,
+      "Sci": 100,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 44,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 103
+    },
+    "total": 600,
+    "obtained": 575,
+    "grade": "A1",
+    "percentage": 95.83333333333334
+  },
+  {
+    "roll": 1067,
+    "name": "Manahil",
+    "class": 3,
+    "father": "Naveed Ahmed",
+    "marks": {
+      "English": 90,
+      "Urdu": 69,
+      "Math": 100,
+      "islamiat": 65,
+      "Sci": 97,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 48,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 100
+    },
+    "total": 600,
+    "obtained": 577,
+    "grade": "A1",
+    "percentage": 96.16666666666667
+  },
+  {
+    "roll": 1075,
+    "name": "Sajid",
+    "class": 3,
+    "father": "Rustam Khan",
+    "marks": {
+      "English": 90,
+      "Urdu": 69,
+      "Math": 100,
+      "islamiat": 69,
+      "Sci": 100,
+      "S-St": 69,
+      "Exbi": 9.0,
+      "Draw": 48,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 115
+    },
+    "total": 600,
+    "obtained": 584,
+    "grade": "A1",
+    "percentage": 97.33333333333334
+  },
+  {
+    "roll": 1103,
+    "name": "Malika",
+    "class": 3,
+    "father": "Sami ullah khan",
+    "marks": {
+      "English": 87,
+      "Urdu": 57,
+      "Math": 46,
+      "islamiat": 5,
+      "Sci": 71,
+      "S-St": 17,
+      "Exbi": 10.0,
+      "Draw": 48,
+      "cop": 8,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 62
+    },
+    "total": 600,
+    "obtained": 368,
+    "grade": "B",
+    "percentage": 61.33333333333333
+  },
+  {
+    "roll": 1070,
+    "name": "Halima Shahzadi",
+    "class": 3,
+    "father": "Mushtaq Ahmed",
+    "marks": {
+      "English": 90,
+      "Urdu": 69,
+      "Math": 83,
+      "islamiat": 69,
+      "Sci": 98,
+      "S-St": 69,
+      "Exbi": 9.0,
+      "Draw": 48,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 93
+    },
+    "total": 600,
+    "obtained": 565,
+    "grade": "A1",
+    "percentage": 94.16666666666667
+  },
+  {
+    "roll": 1016,
+    "name": "M.RAHEEM",
+    "class": 4,
+    "father": "Abdul HAMMEED",
+    "marks": {
+      "English": 95,
+      "Urdu": 69,
+      "Math": 33,
+      "islamiat": 69,
+      "Sci": 89,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 43,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 102
+    },
+    "total": 600,
+    "obtained": 505,
+    "grade": "A1",
+    "percentage": 84.16666666666667
+  },
+  {
+    "roll": 1017,
+    "name": "SUMMAIYA",
+    "class": 4,
+    "father": "TAHIR",
+    "marks": {
+      "English": 99,
+      "Urdu": 69,
+      "Math": 66,
+      "islamiat": 69,
+      "Sci": 99,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 113
+    },
+    "total": 600,
+    "obtained": 561,
+    "grade": "A1",
+    "percentage": 93.5
+  },
+  {
+    "roll": 1027,
+    "name": "Rehan Ali",
+    "class": 4,
+    "father": "Barkat Ali",
+    "marks": {
+      "English": 97,
+      "Urdu": 69,
+      "Math": 66,
+      "islamiat": 69,
+      "Sci": 98,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 47,
+      "cop": 7,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 81
+    },
+    "total": 600,
+    "obtained": 551,
+    "grade": "A1",
+    "percentage": 91.83333333333333
+  },
+  {
+    "roll": 1030,
+    "name": "Nizar Muhammad",
+    "class": 4,
+    "father": "Ezhar Muhammad",
+    "marks": {
+      "English": 99,
+      "Urdu": 69,
+      "Math": 76,
+      "islamiat": 69,
+      "Sci": 95,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 48,
+      "cop": 8,
+      "Uni": 10,
+      "BeH": 5,
+      "Atd": 91
+    },
+    "total": 600,
+    "obtained": 558,
+    "grade": "A1",
+    "percentage": 93.0
+  },
+  {
+    "roll": 1033,
+    "name": "Azan",
+    "class": 4,
+    "father": "Majid Ali",
+    "marks": {
+      "English": 97,
+      "Urdu": 69,
+      "Math": 44,
+      "islamiat": 69,
+      "Sci": 97,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 48,
+      "cop": 7,
+      "Uni": 10,
+      "BeH": 8,
+      "Atd": 89
+    },
+    "total": 600,
+    "obtained": 528,
+    "grade": "A1",
+    "percentage": 88.0
+  },
+  {
+    "roll": 1041,
+    "name": "Mehak",
+    "class": 4,
+    "father": "Ramzan",
+    "marks": {
+      "English": 85,
+      "Urdu": 69,
+      "Math": 18,
+      "islamiat": 65,
+      "Sci": 73,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 46,
+      "cop": 8,
+      "Uni": 9,
+      "BeH": 10,
+      "Atd": 53
+    },
+    "total": 600,
+    "obtained": 462,
+    "grade": "A",
+    "percentage": 77.0
+  },
+  {
+    "roll": 1057,
+    "name": "Alina BiBi",
+    "class": 4,
+    "father": "Rafaqat Ali",
+    "marks": {
+      "English": 98,
+      "Urdu": 69,
+      "Math": 46,
+      "islamiat": 69,
+      "Sci": 99,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 48,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 73
+    },
+    "total": 600,
+    "obtained": 537,
+    "grade": "A1",
+    "percentage": 89.5
+  },
+  {
+    "roll": 1063,
+    "name": "Ali Raza",
+    "class": 4,
+    "father": "Waqas Ahamad",
+    "marks": {
+      "English": 96,
+      "Urdu": 67,
+      "Math": 44,
+      "islamiat": 69,
+      "Sci": 94,
+      "S-St": 69,
+      "Exbi": 8.0,
+      "Draw": 48,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 108
+    },
+    "total": 600,
+    "obtained": 524,
+    "grade": "A1",
+    "percentage": 87.33333333333333
+  },
+  {
+    "roll": 1065,
+    "name": "Roqiya",
+    "class": 4,
+    "father": "Muhammad Asif",
+    "marks": {
+      "English": 67,
+      "Urdu": 69,
+      "Math": 20,
+      "islamiat": 65,
+      "Sci": 64,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 49,
+      "cop": 7,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 113
+    },
+    "total": 600,
+    "obtained": 440,
+    "grade": "A",
+    "percentage": 73.33333333333333
+  },
+  {
+    "roll": 1013,
+    "name": "Amna Bibi",
+    "class": 5,
+    "father": "Muhammad khameed",
+    "marks": {
+      "English": 99,
+      "Urdu": 99,
+      "Math": 58,
+      "islamiat": 69,
+      "Sci": 99,
+      "S-St": 75,
+      "Exbi": 10.0,
+      "Draw": 46,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 94
+    },
+    "total": 635,
+    "obtained": 585,
+    "grade": "A1",
+    "percentage": 92.1259842519685
+  },
+  {
+    "roll": 1040,
+    "name": "Muhammad Rehan ",
+    "class": 5,
+    "father": "Mureed Husain",
+    "marks": {
+      "English": 73,
+      "Urdu": 68,
+      "Math": 34,
+      "islamiat": 68,
+      "Sci": 84,
+      "S-St": 74,
+      "Exbi": 10.0,
+      "Draw": 44,
+      "cop": 8,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 84
+    },
+    "total": 635,
+    "obtained": 483,
+    "grade": "A",
+    "percentage": 76.06299212598425
+  },
+  {
+    "roll": 1009,
+    "name": "Abdulrafey",
+    "class": 5,
+    "father": "AJMAL",
+    "marks": {
+      "English": 38,
+      "Urdu": 65,
+      "Math": 17,
+      "islamiat": 38,
+      "Sci": 14,
+      "S-St": 60,
+      "Exbi": 10.0,
+      "Draw": 45,
+      "cop": 5,
+      "Uni": 10,
+      "BeH": 8,
+      "Atd": 32
+    },
+    "total": 635,
+    "obtained": 310,
+    "grade": "D",
+    "percentage": 48.818897637795274
+  },
+  {
+    "roll": 1002,
+    "name": "Shumilla",
+    "class": 6,
+    "father": "MUNEER",
+    "marks": {
+      "English": 99,
+      "Urdu": 73,
+      "Math": 78,
+      "islamiat": 68,
+      "Sci": 97,
+      "S-St": 75,
+      "Exbi": 10.0,
+      "Draw": 48,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 103
+    },
+    "total": 610,
+    "obtained": 577,
+    "grade": "A1",
+    "percentage": 94.59016393442623
+  },
+  {
+    "roll": 1006,
+    "name": "Abdul Rehman",
+    "class": 6,
+    "father": "Muhammad Arshad",
+    "marks": {
+      "English": 99,
+      "Urdu": "A",
+      "Math": 50,
+      "islamiat": 65,
+      "Sci": 99,
+      "S-St": 75,
+      "Exbi": 10.0,
+      "Draw": 44,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 7,
+      "Atd": 103
+    },
+    "total": 610,
+    "obtained": 468,
+    "grade": "A",
+    "percentage": 76.72131147540983
+  },
+  {
+    "roll": 1015,
+    "name": " FATIMA GUL",
+    "class": 6,
+    "father": "MUHMMAD NAVEED GUL KHAN ",
+    "marks": {
+      "English": 99,
+      "Urdu": 74,
+      "Math": 99,
+      "islamiat": 66,
+      "Sci": 97,
+      "S-St": 75,
+      "Exbi": 10.0,
+      "Draw": 47,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 112
+    },
+    "total": 610,
+    "obtained": 597,
+    "grade": "A1",
+    "percentage": 97.8688524590164
+  },
+  {
+    "roll": 1022,
+    "name": "DUA",
+    "class": 6,
+    "father": "ALI-ASGHAR",
+    "marks": {
+      "English": 99,
+      "Urdu": 73,
+      "Math": 100,
+      "islamiat": 66,
+      "Sci": 97,
+      "S-St": 75,
+      "Exbi": 10.0,
+      "Draw": 49,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 120
+    },
+    "total": 610,
+    "obtained": 599,
+    "grade": "A1",
+    "percentage": 98.19672131147541
+  },
+  {
+    "roll": 1028,
+    "name": "Noor Fatima",
+    "class": 6,
+    "father": "Asif Chaudhry",
+    "marks": {
+      "English": 99,
+      "Urdu": 74,
+      "Math": 99,
+      "islamiat": 68,
+      "Sci": 98,
+      "S-St": 75,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 115
+    },
+    "total": 610,
+    "obtained": 602,
+    "grade": "A1",
+    "percentage": 98.68852459016394
+  },
+  {
+    "roll": 1052,
+    "name": "Eman ",
+    "class": 6,
+    "father": "Sajeel Ahmed",
+    "marks": {
+      "English": 98,
+      "Urdu": 74,
+      "Math": 90,
+      "islamiat": 58,
+      "Sci": 93,
+      "S-St": 74,
+      "Exbi": 10.0,
+      "Draw": 45,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 112
+    },
+    "total": 610,
+    "obtained": 570,
+    "grade": "A1",
+    "percentage": 93.44262295081968
+  },
+  {
+    "roll": 1053,
+    "name": "Kanwal",
+    "class": 6,
+    "father": "Sajeel Ahmed",
+    "marks": {
+      "English": 94,
+      "Urdu": 74,
+      "Math": 99,
+      "islamiat": 53,
+      "Sci": 95,
+      "S-St": 74,
+      "Exbi": 10.0,
+      "Draw": 46,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 9,
+      "Atd": 111
+    },
+    "total": 610,
+    "obtained": 573,
+    "grade": "A1",
+    "percentage": 93.93442622950819
+  },
+  {
+    "roll": 1066,
+    "name": "Ehetesham",
+    "class": 6,
+    "father": "Muhammad irfan ",
+    "marks": {
+      "English": 95,
+      "Urdu": 64,
+      "Math": 80,
+      "islamiat": 60,
+      "Sci": 92,
+      "S-St": 73,
+      "Exbi": 10.0,
+      "Draw": 45,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 115
+    },
+    "total": 610,
+    "obtained": 549,
+    "grade": "A1",
+    "percentage": 90.0
+  },
+  {
+    "roll": 1081,
+    "name": "Kulsoom Fathima",
+    "class": 6,
+    "father": "AZAM HUSSAIN",
+    "marks": {
+      "English": 99,
+      "Urdu": 74,
+      "Math": 99,
+      "islamiat": 70,
+      "Sci": 95,
+      "S-St": 75,
+      "Exbi": 10.0,
+      "Draw": 47,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 107
+    },
+    "total": 610,
+    "obtained": 599,
+    "grade": "A1",
+    "percentage": 98.19672131147541
+  },
+  {
+    "roll": 1113,
+    "name": "samreen",
+    "class": 6,
+    "father": "GULAm Muhammad",
+    "marks": {
+      "English": 93,
+      "Urdu": 74,
+      "Math": 80,
+      "islamiat": 64,
+      "Sci": 93,
+      "S-St": 74,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 7,
+      "Uni": 0,
+      "BeH": 5,
+      "Atd": 27
+    },
+    "total": 610,
+    "obtained": 550,
+    "grade": "A1",
+    "percentage": 90.1639344262295
+  },
+  {
+    "roll": 1004,
+    "name": "Noman",
+    "class": 7,
+    "father": "AZIZUL RAHEEM",
+    "marks": {
+      "English": 97,
+      "Urdu": 81,
+      "Math": 12,
+      "islamiat": 63,
+      "Sci": 48,
+      "S-St": 37,
+      "Exbi": 8.0,
+      "Draw": 48,
+      "cop": 3,
+      "Uni": 10,
+      "BeH": 6,
+      "Atd": 99
+    },
+    "total": 620,
+    "obtained": 413,
+    "grade": "B",
+    "percentage": 66.61290322580645
+  },
+  {
+    "roll": 1043,
+    "name": "Alisha",
+    "class": 7,
+    "father": "Zafran Khan",
+    "marks": {
+      "English": 99,
+      "Urdu": 87,
+      "Math": 37,
+      "islamiat": 65,
+      "Sci": 90,
+      "S-St": 68,
+      "Exbi": 10.0,
+      "Draw": 49,
+      "cop": 9,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 126
+    },
+    "total": 620,
+    "obtained": 534,
+    "grade": "A1",
+    "percentage": 86.12903225806451
+  },
+  {
+    "roll": 1107,
+    "name": "Muhammad Hassan",
+    "class": 7,
+    "father": "Muhammad Abid",
+    "marks": {
+      "English": 94,
+      "Urdu": 78,
+      "Math": 12,
+      "islamiat": 50,
+      "Sci": 47,
+      "S-St": 39,
+      "Exbi": 0.0,
+      "Draw": 48,
+      "cop": 9,
+      "Uni": 0,
+      "BeH": 9,
+      "Atd": 48
+    },
+    "total": 620,
+    "obtained": 386,
+    "grade": "B",
+    "percentage": 62.25806451612903
+  },
+  {
+    "roll": 1005,
+    "name": "Tuba",
+    "class": 8,
+    "father": "Muhammad Arshad",
+    "marks": {
+      "English": 99,
+      "Urdu": 69,
+      "Math": 95,
+      "islamiat": 67,
+      "Sci": "A",
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 48,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 8,
+      "Atd": 114
+    },
+    "total": 600,
+    "obtained": 485,
+    "grade": "A1",
+    "percentage": 80.83333333333333
+  },
+  {
+    "roll": 1018,
+    "name": "SALMA",
+    "class": 8,
+    "father": "TAHIR",
+    "marks": {
+      "English": 99,
+      "Urdu": 69,
+      "Math": 98,
+      "islamiat": 70,
+      "Sci": 100,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 49,
+      "cop": 10,
+      "Uni": 9,
+      "BeH": 8,
+      "Atd": 120
+    },
+    "total": 600,
+    "obtained": 591,
+    "grade": "A1",
+    "percentage": 98.5
+  },
+  {
+    "roll": 1021,
+    "name": "JAWRIA",
+    "class": 8,
+    "father": "ALI-ASGHAR",
+    "marks": {
+      "English": 99,
+      "Urdu": 69,
+      "Math": 100,
+      "islamiat": 70,
+      "Sci": 100,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 120
+    },
+    "total": 600,
+    "obtained": 597,
+    "grade": "A1",
+    "percentage": 99.5
+  },
+  {
+    "roll": 1023,
+    "name": "Haris",
+    "class": 8,
+    "father": "TARIQ MAHMOOD",
+    "marks": {
+      "English": 98,
+      "Urdu": 69,
+      "Math": 99,
+      "islamiat": 70,
+      "Sci": 99,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 47,
+      "cop": 10,
+      "Uni": 8,
+      "BeH": 9,
+      "Atd": 96
+    },
+    "total": 600,
+    "obtained": 588,
+    "grade": "A1",
+    "percentage": 98.0
+  },
+  {
+    "roll": 1029,
+    "name": "Romisa",
+    "class": 8,
+    "father": "Kamran",
+    "marks": {
+      "English": 99,
+      "Urdu": 69,
+      "Math": 98,
+      "islamiat": 70,
+      "Sci": 100,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 49,
+      "cop": 10,
+      "Uni": 9,
+      "BeH": 9,
+      "Atd": 121
+    },
+    "total": 600,
+    "obtained": 592,
+    "grade": "A1",
+    "percentage": 98.66666666666667
+  },
+  {
+    "roll": 1035,
+    "name": "Tayyaba Younus",
+    "class": 8,
+    "father": "Muhammad Younus",
+    "marks": {
+      "English": 99,
+      "Urdu": 69,
+      "Math": 100,
+      "islamiat": 70,
+      "Sci": 100,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 70
+    },
+    "total": 600,
+    "obtained": 597,
+    "grade": "A1",
+    "percentage": 99.5
+  },
+  {
+    "roll": 1090,
+    "name": "Asra",
+    "class": 8,
+    "father": "Abdul Razzaq",
+    "marks": {
+      "English": 98,
+      "Urdu": 69,
+      "Math": 90,
+      "islamiat": 69,
+      "Sci": 100,
+      "S-St": 69,
+      "Exbi": 10.0,
+      "Draw": 50,
+      "cop": 10,
+      "Uni": 10,
+      "BeH": 10,
+      "Atd": 81
+    },
+    "total": 600,
+    "obtained": 585,
+    "grade": "A1",
+    "percentage": 97.5
+  }
+];
+
+let lastResult = null;
+
+function calcGrade(total){
+  if(total>=450) return "A+";
+  if(total>=400) return "A";
+  if(total>=350) return "B";
+  if(total>=300) return "C";
+  return "D";
+}
+
+function findResult(){
+  const roll = Number(document.getElementById("roll").value);
+  const box = document.getElementById("result");
+  const btn = document.getElementById("downloadBtn");
+
+  const st = students.find(s=>s.roll===roll);
+  if(!st){
+    box.style.display="block";
+    box.innerHTML = "<b>No student found!</b>";
+    btn.style.display="none";
+    return;
+  }
+
+    const subjects = st.marks;
+  // Use stored obtained if present (from Excel); otherwise sum subject marks safely
+  const total = (typeof st.obtained !== 'undefined' && st.obtained !== null) ? Number(st.obtained) : Object.values(subjects).reduce((a,b)=> (Number(a)||0) + (Number(b)||0),0);
+  const grade = st.grade;
+
+  lastResult = {st, total, grade};
+
+  let html = `
+    <h3>Student Information</h3>
+    <p><b>Roll No:</b> ${st.roll}</p>
+    <p><b>Name:</b> ${st.name}</p>
+    <p><b>Class:</b> ${st.class}</p>
+
+    <h3>Marks</h3>
+    <table class="table">
+      <tr><th>Subject</th><th>Marks</th></tr>
+  `;
+
+  for(const sub in subjects){
+    html += `<tr><td>${sub}</td><td>${subjects[sub]}</td></tr>`;
+  }
+
+  html += `
+    </table>
+    <p><b>Total Marks:</b> ${total} / ${st.total}</p>
+    <p><b>Grade:</b> ${grade}</p>
+  `;
+
+  box.style.display="block";
+  box.innerHTML = html;
+  btn.style.display="block";
+}
+
+function downloadResult(){
+  if(!lastResult){ return; }
+  const {st,total,grade} = lastResult;
+
+  let content = `STUDENT RESULT\n\n`;
+  content += `Roll No: ${st.roll}\n`;
+  content += `Name: ${st.name}\n`;
+  content += `Class: ${st.class}\n\n`;
+  content += `SUBJECT WISE MARKS:\n`;
+  for(const sub in st.marks){
+    content += `${sub}: ${st.marks[sub]}\n`;
+  }
+  content += `\nTotal Marks: ${total}/${st.total}\n`;
+  content += `Grade: ${grade}\n`;
+
+  const blob = new Blob([content], {type:'application/msword'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = st.roll + "_result.doc";
+  a.click();
+}
+</script>
+
+</body>
+</html>
+
+
+<!-- added pro doc download -->
+<script>
+function downloadResultAsDoc(data){
+  const htmlContent = `
+  <html xmlns:o='urn:schemas-microsoft-com:office:office'
+  xmlns:w='urn:schemas-microsoft-com:office:word'
+  xmlns='http://www.w3.org/TR/REC-html40'>
+  <head><meta charset='utf-8'><title>Result</title></head>
+  <body style="font-family:Arial;padding:20px;">
+    <h2 style="text-align:center;font-size:24px;font-family:'Arial Black';">Student Result</h2>
+    <table style="width:100%;border-collapse:collapse;font-size:16px;">
+      <tr><td><b>Roll Number:</b></td><td>${data.roll}</td></tr>
+      <tr><td><b>Name:</b></td><td>${data.name}</td></tr>
+      <tr><td><b>Father Name:</b></td><td>${data.fname}</td></tr>
+      <tr><td><b>Class:</b></td><td>${data.class}</td></tr>
+    </table>
+    <br>
+    <h3>Subject Wise Marks</h3>
+    <table style="width:100%;border-collapse:collapse;" border="1">
+      ${data.marksHtml}
+    </table>
+    <br>
+    <h3>Total: ${data.total} | Grade: ${data.grade}</h3>
+  </body></html>`;
+
+  const blob = new Blob([htmlContent], {type:'application/msword'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download = data.roll + "_result.doc";
+  a.click();
+}
+</script>
