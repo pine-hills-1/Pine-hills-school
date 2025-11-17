@@ -1,76 +1,30 @@
 <!doctype html>
 <html lang="hi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Videos — Pine Hills School</title>
   <style>
-    body{
-      font-family:Inter,Arial;
-      background:#fbfdff;
-      margin:0;
-      color:#03264c;
-    }
-    header{
-      background:linear-gradient(90deg,#0b67ff,#009dff);
-      color:white;
-      padding:14px;
-    }
-    .wrap{
-      max-width:1000px;
-      margin:20px auto;
-      padding:16px;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-      gap:16px;
-    }
-    .video{
-      background:white;
-      padding:12px;
-      border-radius:10px;
-      box-shadow:0 8px 20px rgba(3,38,76,0.06);
-    }
-    video{
-      width:100%;
-      height:220px;
-      border-radius:8px;
-    }
-    a.back{
-      display:inline-block;
-      margin:8px 0;
-      color:#0b67ff;
-      text-decoration:none;
-    }
+    body{font-family:Inter,Arial;background:#fbfdff;margin:0;color:#03264c}
+    header{background:linear-gradient(90deg,#0b67ff,#009dff);color:white;padding:14px}
+    .wrap{max-width:1000px;margin:20px auto;padding:16px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+    .video{background:white;padding:12px;border-radius:10px;box-shadow:0 8px 20px rgba(3,38,76,0.06)}
+    iframe{width:100%;height:220px;border-radius:8px;border:0}
+    a.back{display:inline-block;margin:8px 0;color:#0b67ff;text-decoration:none}
+    
   </style>
-</head>
-<body>
-  <header>
-    <div style="max-width:1100px;margin:0 auto">
-      <h2 style="margin:0">Videos</h2>
-    </div>
-  </header>
-
-  <div class="wrap">
-    <a class="back" href="index.html">← Back to Home</a>
-    <p>Educational & classroom videos:</p>
-
+</head><body>
+  <header><div style="max-width:1100px;margin:0 auto"><h2 style="margin:0">Videos</h2></div></header>
+  <div class="wrap"><a class="back" href="index.html">← Back to Home</a>
+    <p>Educational & classroom videos (sample embeds):</p>
     <div class="grid">
+      <div class="video"><h4></h4><iframe src="video1.mp4" allowfullscreen></iframe></div>
+      <div class="video"><h4></h4><iframe src="video2.mp4" allowfullscreen></iframe></div>
+      <div class="video"><h4></h4><iframe src="video3.mp4" allowfullscreen></iframe></div>
+      <div class="video"><h4></h4><iframe src="quality_restoration_20251115152722897.mp4" allowfullscreen></iframe></div>
+      <div class="video"><h4></h4><iframe src="IMG_0721.mp4" allowfullscreen></iframe></div>
 
-      <div class="video">
-        <video src="video1.mp4" controls></video>
-      </div>
-
-      <div class="video">
-        <video src="video2.mp4" controls></video>
-      </div>
-
-      <div class="video">
-        <video src="video3.mp4" controls></video>
-      </div>
 
     </div>
   </div>
-</body>
-</html>
+</body></html>
