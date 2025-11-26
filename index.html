@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="hi">
 <head>
-<meta charset="utf-8"/>
-<link href="logo.png" rel="icon" type="image/png"/><link href="logo.png" rel="apple-touch-icon"/><link href="manifest.json" rel="manifest"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>Pine Hills School — Home</title>
-<meta content="Official site of Pine Hills School — Excellence, Education and Discipline." name="description"/>
-<style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pine Hills School — Home</title>
+  <meta name="description" content="Official site of Pine Hills School — Excellence, Education and Discipline.">
+  <style>
     :root{--primary:#0b67ff;--accent:#0077cc;--bg:#f6f9ff;--card:#ffffff;--muted:#6b7280;--dark:#03264c;}
     *{box-sizing:border-box} body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; background:var(--bg); color:var(--dark);}
 
@@ -90,76 +89,89 @@
       100%{box-shadow:0 0 18px #0048ff;}
     }
 </style>
+
 </head>
 <body>
+
 <nav class="topnav">
-<div class="nav-inner">
-<a class="brand" href="index.html"><img alt="Pine Hills School logo" class="logo" src="logo.png"/><span>Pine Hills School</span></a>
-<button aria-label="Toggle menu" class="menu-toggle">☰</button>
-<ul class="nav-links">
-<li><a href="index.html">Home</a></li>
-<li><a href="teachers.html">Teachers</a></li>
-<li><a href="videos.html">Videos</a></li>
-<li><a href="activities.html">Activities</a></li>
-<li><a href="#contact">Contact</a></li>
-</ul>
-</div>
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><img src="logo.png" alt="Pine Hills School logo" class="logo"><span>Pine Hills School</span></a>
+    <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="teachers.html">Teachers</a></li>
+      <li><a href="videos.html">Videos</a></li>
+      <li><a href="activities.html">Activities</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
 </nav>
+
 <!-- Welcome Animation -->
 <div class="welcome-banner">
   👨‍👩‍👧‍👦 Welcome Dear Parents — We're Happy You're Here!
 </div>
-<main>
-<section aria-label="Intro" class="hero">
-<div>
-<div class="title">Welcome to <strong>Pine Hills School</strong></div>
-<p>Hamara mission: academic excellence, strong values, and holistic development. Explore teachers, assignments, learning videos, aur activities using the navigation buttons.</p>
-<div class="cta-row">
-<a class="btn" href="">Images/Photos</a>
-<a class="btn light" href="videos.html">Watch Videos</a>
-<a class="btn" href="results.html">Results</a>
-</div>
-<div id="quick-links" style="margin-top:22px">
-<div style="display:flex;gap:12px;flex-wrap:wrap">
-<a class="card" href="activities.html" style="flex:1;min-width:220px;text-align:left">
-<h4 style="margin:8px 0;color:var(--dark)">Activities &amp; Events</h4>
-<p style="margin:0;color:var(--muted)">Sports, arts, cultural programs and more.</p>
-</a>
-<a class="card" href="#gallery" style="flex:1;min-width:220px;text-align:left">
-<h4 style="margin:8px 0;color:var(--dark)">Photo Gallery</h4>
-<p style="margin:0;color:var(--muted)">School life captured in pictures.</p>
-</a>
-</div>
-</div>
-</div>
-<aside class="hero-card">
-<img alt="Pine Hills School logo" src="logo.png" style="height:240px;object-fit:contain;padding:18px;background:linear-gradient(180deg,#fff,#f0f6ff);"/>
-<div style="padding:6px 4px;text-align:center">
-<strong>Pine Hills School — Abidabad</strong>
-<p style="color:var(--muted);margin:6px 0 0 0">Contact: pinehillsschool@gmail.com • WhatsApp: 0346-2053510</p>
-</div>
-</aside>
-</section>
-<section aria-label="Gallery" class="section" id="gallery">
-<h2 style="text-align:center;color:var(--dark);font-size:26px">Image Gallery</h2>
-<div class="grid" style="margin-top:16px">
-<div class="card"><img src="img1.jpg"/><h3 style="margin:10px 0 0 0"></h3></div>
-<div class="card"><img src="img2.jpg"/><h3 style="margin:10px 0 0 0"></h3></div>
-<div class="card"><img src="img3.jpg"/><h3 style="margin:10px 0 0 0"></h3></div>
-<div class="card"><img src="img4.jpg"/><h3 style="margin:10px 0 0 0"></h3></div>
-</div>
-</section>
-<section aria-label="Contact" id="contact">
-<p>📧 pinehillsschool@gmail.com • 📞 WhatsApp: +923462053510 • 📍 Pine Hills School, Abidabad Block A</p>
-</section>
-</main>
-<footer>
-<div style="max-width:1100px;margin:0 auto;">
-<p style="font-weight:700">Pine Hills School</p>
-<p style="margin-top:6px">Copyright © 2025 Pine Hills School. All rights reserved.</p>
-</div>
-</footer>
-<script>
+
+  <main>
+    <section class="hero" aria-label="Intro">
+      <div>
+        <div class="title">Welcome to <strong>Pine Hills School</strong></div>
+        <p>Hamara mission: academic excellence, strong values, and holistic development. Explore teachers, assignments, learning videos, aur activities using the navigation buttons.</p>
+        <div class="cta-row">
+          <a class="btn" href="#">Photos</a>
+          <a class="btn light" href="videos.html">Watch Videos</a>
+          <a class="btn" href="results.html">Results</a>
+          <a class="btn" href="monthlytest.html">Monthly Test</a>
+          <a class="btn" href="cartoons.html">Cartoons</a>
+        </div>
+
+        <div style="margin-top:22px" id="quick-links">
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <a class="card" style="flex:1;min-width:220px;text-align:left" href="activities.html">
+              <h4 style="margin:8px 0;color:var(--dark)">Activities & Events</h4>
+              <p style="margin:0;color:var(--muted)">Sports, arts, cultural programs and more.</p>
+            </a>
+            <a class="card" style="flex:1;min-width:220px;text-align:left" href="#gallery">
+              <h4 style="margin:8px 0;color:var(--dark)">Photo Gallery</h4>
+              <p style="margin:0;color:var(--muted)">School life captured in pictures.</p>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <aside class="hero-card">
+        <img src="logo.png" alt="Pine Hills School logo" style="height:240px;object-fit:contain;padding:18px;background:linear-gradient(180deg,#fff,#f0f6ff);">
+        <div style="padding:6px 4px;text-align:center">
+          <strong>Pine Hills School — Abidabad</strong>
+          <p style="color:var(--muted);margin:6px 0 0 0">Contact: pinehillsschool@gmail.com • WhatsApp: 0346-2053510</p>
+        </div>
+      </aside>
+    </section>
+
+    <section id="gallery" class="section" aria-label="Gallery">
+      <h2 style="text-align:center;color:var(--dark);font-size:26px">Image Gallery</h2>
+      <div class="grid" style="margin-top:16px">
+        <div class="card"><img src="img1.jpg"><h3 style="margin:10px 0 0 0"></h3></div>
+        <div class="card"><img src="img2.jpg"><h3 style="margin:10px 0 0 0"></h3></div>
+        <div class="card"><img src="img3.jpg"><h3 style="margin:10px 0 0 0"></h3></div>
+        <div class="card"><img src="img4.jpg"><h3 style="margin:10px 0 0 0"></h3></div>
+      </div>
+    </section>
+
+    <section id="contact" aria-label="Contact">
+      <p>📧 pinehillsschool@gmail.com • 📞 WhatsApp: +923462053510 • 📍 Pine Hills School, Abidabad Block A</p>
+    </section>
+  </main>
+
+  <footer>
+    <div style="max-width:1100px;margin:0 auto;">
+      <p style="font-weight:700">Pine Hills School</p>
+      <p style="margin-top:6px">Copyright © 2025 Pine Hills School. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
     const btn = document.querySelector('.menu-toggle');
     const nav = document.querySelector('.nav-links');
     btn && btn.addEventListener('click', ()=>{
@@ -167,5 +179,6 @@
       else{ nav.style.display = 'flex'; nav.style.flexDirection = 'column'; nav.style.background = 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.02))'; nav.style.padding = '10px'; nav.style.position='absolute'; nav.style.right='16px'; nav.style.top='64px'; nav.style.borderRadius='8px'; }
     });
   </script>
+
 </body>
 </html>
